@@ -315,7 +315,7 @@ export default function SettlementPage() {
             Verdict Not Synced Yet
           </h3>
           <p className="mb-6" style={{ color: 'var(--text-muted)' }}>
-            The market is marked {market?.status} but the verdict details haven't been synced from GenLayer yet.
+            The market is marked {market?.status} but the verdict details have not been synced from GenLayer yet.
           </p>
           <button onClick={handleSync} disabled={stepState === 'loading'} className="genseer-button px-6 py-3">
             {stepState === 'loading' ? 'Syncing…' : 'Sync Verdict Now'}
