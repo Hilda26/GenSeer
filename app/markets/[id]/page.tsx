@@ -8,6 +8,7 @@ import OutcomePoolCard from '@/components/OutcomePoolCard'
 import PoolProbabilityBar from '@/components/PoolProbabilityBar'
 import StakeModal from '@/components/StakeModal'
 import LoadingState from '@/components/LoadingState'
+import MarketComments from '@/components/MarketComments'
 import { formatDateTime, formatTimeRemaining, formatCategoryLabel } from '@/lib/utils/formatting'
 import { useWallet } from '@/contexts/WalletContext'
 import { supabase } from '@/lib/supabase/client'
@@ -225,6 +226,16 @@ export default function MarketDetailPage() {
           </div>
         </div>
       )}
+
+      {/* Comments */}
+      <div className="mt-6">
+        <MarketComments
+          marketId={market.id}
+          walletAddress={walletAddress}
+          isConnected={isConnected}
+          onConnect={connect}
+        />
+      </div>
 
       {/* Stake Modal */}
       {stakeModalOpen && selectedOutcomeIndex !== null && walletAddress && (

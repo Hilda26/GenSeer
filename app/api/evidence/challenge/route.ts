@@ -58,6 +58,29 @@ export async function POST(request: NextRequest) {
       metadata: { evidence_id, challenge_id: challenge.id, reason },
     })
 
+    // Notify the evidence submitter if different from challenger
+    try {
+      const { data: evidenceItem } = await supabase
+        .from('evidence_items')
+        .select('submitted_by, users!evidence_items_submitted_by_fkey(wallet_address)')
+        .eq('id', evidence_id)
+        .single()
+
+      const submitterWallet = (evidenceItem?.users as unknown as { wallet_address: string } | null)?.wallet_address
+      if (submitterWallet && submitterWallet !== wallet_address) {
+        const { data: mktData } = await supabase.from('markets').select('title').eq('id', market_id).single()
+        const title = mktData?.title?.slice(0, 50) || 'a market'
+        await supabase.from('notifications').insert({
+          wallet_address: submitterWallet,
+          market_id,
+          type: 'evidence_challenged',
+          message: `Your evidence in "${title}" was challenged: ${reason}`,
+        })
+      }
+    } catch {
+      // non-critical
+    }
+
     return NextResponse.json({ challenge })
   } catch (err) {
     return NextResponse.json({ error: (err as Error).message }, { status: 500 })

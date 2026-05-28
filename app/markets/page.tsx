@@ -6,6 +6,7 @@ import MarketCard from '@/components/MarketCard'
 import LoadingState from '@/components/LoadingState'
 import EmptyState from '@/components/EmptyState'
 import { MARKET_CATEGORIES } from '@/lib/utils/constants'
+import { useWallet } from '@/contexts/WalletContext'
 import type { Market, Outcome } from '@/types'
 
 const STATUS_FILTERS = [
@@ -29,17 +30,19 @@ function getMarketPool(m: Market) {
 }
 
 export default function MarketsPage() {
+  const { address: walletAddress, isConnected } = useWallet()
   const [markets, setMarkets] = useState<Market[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [statusFilter, setStatusFilter] = useState('')
   const [categoryFilter, setCategoryFilter] = useState('')
+  const [creatorFilter, setCreatorFilter] = useState('')
   const [search, setSearch] = useState('')
   const [sortBy, setSortBy] = useState('newest')
 
   useEffect(() => {
     fetchMarkets()
-  }, [statusFilter, categoryFilter])
+  }, [statusFilter, categoryFilter, creatorFilter])
 
   async function fetchMarkets() {
     try {
@@ -48,6 +51,7 @@ export default function MarketsPage() {
       const params = new URLSearchParams()
       if (statusFilter) params.set('status', statusFilter)
       if (categoryFilter) params.set('category', categoryFilter)
+      if (creatorFilter) params.set('creator_wallet', creatorFilter)
       const res = await fetch(`/api/markets?${params}`)
       if (!res.ok) throw new Error('Failed to fetch markets')
       const data = await res.json()
@@ -89,15 +93,15 @@ export default function MarketsPage() {
 
       {/* Filters */}
       <div className="flex flex-wrap gap-3 mb-6">
-        {/* Search + Sort row */}
-        <div className="flex gap-3 w-full">
+        {/* Search + Sort + Creator row */}
+        <div className="flex flex-wrap gap-3 w-full">
           <input
             type="text"
             placeholder="Search markets..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="genseer-input flex-1 min-w-48 text-sm"
-            style={{ maxWidth: 320 }}
+            style={{ maxWidth: 280 }}
           />
           <select
             value={sortBy}
@@ -109,6 +113,20 @@ export default function MarketsPage() {
               <option key={opt.value} value={opt.value}>{opt.label}</option>
             ))}
           </select>
+          {/* Creator filter */}
+          {isConnected && walletAddress && (
+            <button
+              onClick={() => setCreatorFilter(creatorFilter ? '' : walletAddress)}
+              className="px-4 py-2 rounded-full text-sm font-medium transition-all"
+              style={{
+                background: creatorFilter ? 'var(--primary)' : 'rgba(255,255,255,0.04)',
+                color: creatorFilter ? 'white' : 'var(--text-muted)',
+                border: '1px solid var(--border)',
+              }}
+            >
+              My Markets
+            </button>
+          )}
         </div>
         {/* Status pills */}
         <div className="flex gap-2 flex-wrap">

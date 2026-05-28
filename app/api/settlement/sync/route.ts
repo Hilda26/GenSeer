@@ -82,6 +82,34 @@ export async function POST(request: NextRequest) {
       metadata: { verdict, winning_outcome_index: settlementData.winning_outcome_index },
     })
 
+    // Notify all unique stakers for this market
+    try {
+      const { data: stakers } = await supabase
+        .from('stakes')
+        .select('wallet_address')
+        .eq('market_id', market_id)
+
+      if (stakers && stakers.length > 0) {
+        const uniqueWallets = [...new Set(stakers.map((s: { wallet_address: string }) => s.wallet_address))]
+        const { data: mktData } = await supabase.from('markets').select('title').eq('id', market_id).single()
+        const title = mktData?.title?.slice(0, 50) || 'a market'
+        const winLabel = isSettled ? (settlementData.winning_outcome_label as string) : null
+        const message = isSettled
+          ? `Verdict: "${winLabel}" won in "${title}". Claim your payout.`
+          : `"${title}" was marked ${newStatus}. Stakes are refundable.`
+
+        const notifications = uniqueWallets.map((wallet) => ({
+          wallet_address: wallet,
+          market_id,
+          type: 'verdict_synced',
+          message,
+        }))
+        await supabase.from('notifications').insert(notifications)
+      }
+    } catch {
+      // non-critical — notifications failure should not block response
+    }
+
     return NextResponse.json({ success: true, settlement, status: newStatus })
   } catch (err) {
     return NextResponse.json({ error: (err as Error).message }, { status: 500 })

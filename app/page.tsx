@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { MARKET_CATEGORIES } from '@/lib/utils/constants'
+import StatsSection from '@/components/StatsSection'
 
 export default function HomePage() {
   return (
@@ -41,6 +42,9 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* Live Stats */}
+      <StatsSection />
 
       {/* How It Works */}
       <section className="px-6 py-20 max-w-6xl mx-auto">

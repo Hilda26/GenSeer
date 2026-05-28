@@ -3,12 +3,14 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useWallet } from '@/contexts/WalletContext'
+import NotificationBell from './NotificationBell'
 
 const NAV_LINKS = [
   { href: '/markets', label: 'Markets' },
   { href: '/markets/create', label: 'Create' },
   { href: '/profile', label: 'Profile' },
   { href: '/reputation', label: 'Reputation' },
+  { href: '/admin', label: 'Admin' },
 ]
 
 export default function Navbar() {
@@ -54,9 +56,10 @@ export default function Navbar() {
         ))}
       </div>
 
-      {/* Wallet */}
+      {/* Wallet + Notifications */}
       {isConnected && address ? (
         <div className="flex items-center gap-2">
+          <NotificationBell wallet={address} />
           <div
             className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium"
             style={{ border: '1px solid var(--border)', color: 'var(--text-muted)', background: 'rgba(255,255,255,0.03)' }}

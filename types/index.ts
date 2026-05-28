@@ -127,6 +127,25 @@ export interface MarketActivity {
   user?: User
 }
 
+export interface Comment {
+  id: string
+  market_id: string
+  wallet_address: string
+  username: string | null
+  text: string
+  created_at: string
+}
+
+export interface Notification {
+  id: string
+  wallet_address: string
+  market_id: string | null
+  type: string
+  message: string
+  read: boolean
+  created_at: string
+}
+
 export interface SettlementPacket {
   market_id: string
   question: string
