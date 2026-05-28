@@ -1,0 +1,125 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #070A13;
+  --surface: #0F172A;
+  --surface-soft: #162033;
+  --surface-raised: #1D2A44;
+  --primary: #6C5CE7;
+  --primary-glow: #A78BFA;
+  --electric-blue: #38BDF8;
+  --signal-green: #22C55E;
+  --warning-amber: #F59E0B;
+  --danger-red: #EF4444;
+  --text-main: #F8FAFC;
+  --text-muted: #94A3B8;
+  --text-faint: #64748B;
+  --border: rgba(148, 163, 184, 0.18);
+  --glow: rgba(108, 92, 231, 0.28);
+}
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+html,
+body {
+  max-width: 100vw;
+  overflow-x: hidden;
+}
+
+body {
+  background:
+    radial-gradient(circle at top left, rgba(108, 92, 231, 0.22), transparent 32%),
+    radial-gradient(circle at top right, rgba(56, 189, 248, 0.12), transparent 28%),
+    var(--background);
+  color: var(--text-main);
+  font-family: Inter, system-ui, sans-serif;
+  min-height: 100vh;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.genseer-card {
+  background: linear-gradient(180deg, rgba(22, 32, 51, 0.96), rgba(15, 23, 42, 0.96));
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.30);
+}
+
+.genseer-button {
+  background: linear-gradient(135deg, var(--primary), var(--electric-blue));
+  color: white;
+  border-radius: 999px;
+  padding: 12px 20px;
+  font-weight: 700;
+  cursor: pointer;
+  border: none;
+  transition: opacity 0.2s, transform 0.1s;
+}
+
+.genseer-button:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+
+.genseer-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.genseer-input {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border);
+  color: var(--text-main);
+  border-radius: 16px;
+  padding: 12px 14px;
+  width: 100%;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.genseer-input:focus {
+  border-color: var(--primary);
+}
+
+.genseer-input::placeholder {
+  color: var(--text-faint);
+}
+
+.genseer-muted {
+  color: var(--text-muted);
+}
+
+.glow-primary {
+  box-shadow: 0 0 20px var(--glow);
+}
+
+.glow-text {
+  text-shadow: 0 0 20px rgba(108, 92, 231, 0.5);
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--surface);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.2);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(148, 163, 184, 0.4);
+}
